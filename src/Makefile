@@ -30,6 +30,7 @@ TARGET?=s21_math.a
 
 all: $(TARGET)
 
+
 $(TEST_OBJECTS_DIR)/main.o: main.c 
 	@$(MK) $(TEST_OBJECTS_DIR)
 	$(CC) $(CFLAGS) $(SAN_G_FLAGS) -o $(TEST_OBJECTS_DIR)/main.o main.c  
