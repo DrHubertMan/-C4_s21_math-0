@@ -1,5 +1,8 @@
 #include"s21_math.h"
 
-int s21_factorial(int x) {
-    return (x < 2) ? 1 : s21_factorial(x - 1);
+long double s21_factorial(int x) {
+    long double result;
+    if (x <= 1) result = 1;
+    else result = x * s21_factorial(x-1);
+    return result;
 }

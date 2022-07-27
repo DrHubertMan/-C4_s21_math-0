@@ -1,7 +1,5 @@
-#include"math.h"
+#include"s21_math.h"
 
-long double tan(double x) {
-    long double result;
-    result = s21_sin(x)/s21_cos(x);
-    return result;
+long double s21_tan(double x) {
+    return s21_sin(x)/s21_cos(x);;
 }
