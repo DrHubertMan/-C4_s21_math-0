@@ -19,6 +19,6 @@ long double s21_sin(double x);
 long double s21_factorial(int x);
 long double s21_cos(double x);
 long double s21_tan(double x);
-long double s21_acos(double x);
+long double s21_atan(double x);
 
 #endif  // SRC_S21_MATH_H_
