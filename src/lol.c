@@ -3,7 +3,9 @@
 #include"s21_math.h"
 
 int main() {
-    printf("s21_log(x) = %Lf\n", s21_log(-3));
-    printf("log(x) = %f\n", log(-3));
+    double k = 0;
+    printf("k = %lf\n", k);
+    printf("s21_sqrt = %Lf\n", s21_sqrt(k));
+    printf("sqrt = %lf\n", sqrt(k));
     return 0;
 }
