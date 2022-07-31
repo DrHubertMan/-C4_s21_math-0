@@ -1,5 +1,5 @@
 CC = gcc -g
-CFLAGSCOV = -Wall -Werror -Wextra -c -fprofile-arcs -ftest-coverage -lcheck
+CFLAGSCOV = -Wall -Werror -Wextra -c -fprofile-arcs -ftest-coverage -lcheck #-fsanitize=address
 CFLAGS = -Wall -Werror -Wextra -c
 
 all: test gcov_report 
@@ -8,7 +8,9 @@ gcov_report: test
 	gcov -f *.gcda
 	lcov -t "test" -o test.info -c -d . --rc lcov_branch_coverage=1
 	genhtml -o report test.info  --rc lcov_branch_coverage=1
-	# open repot/test.info
+	mkdir timeout
+	rm -rf timeout
+	open /Users/mammiemi/Desktop/C4_s21_math-0/src/report/index.html
 
 test: s21_math.a
 	$(CC) --coverage -o test_coverage.out tests/tests.o -lcheck -L. s21_math.a 

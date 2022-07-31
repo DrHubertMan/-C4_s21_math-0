@@ -8,9 +8,9 @@ long double s21_log(double x) {
         result = -S21_NAN;
     } else if (x == S21_INF) {
         result = x;
-    } else if ( x == -S21_INF || x < 0) {
+    } else if (x == -S21_INF || x < 0) {
         result = S21_NAN;
-    } else if ( x == 0) {
+    } else if (x == 0) {
         result = -S21_INF;
     } else {
         for (; x >= S21_EXP; x /= S21_EXP, exp++) continue;

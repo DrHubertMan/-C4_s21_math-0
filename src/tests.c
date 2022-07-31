@@ -83,6 +83,7 @@ START_TEST(pow_test_3) {
     ck_assert_double_eq(pow(2, -INFINITY), s21_pow(2, -S21_INF));
     ck_assert_double_eq(pow(0.5, -INFINITY), s21_pow(0.5, -S21_INF));
     ck_assert_double_eq(pow(-2, -INFINITY), s21_pow(-2, -S21_INF));
+    ck_assert_double_eq(pow(-INFINITY, 2), s21_pow(-S21_INF, 2));
 }
 END_TEST
 
@@ -242,7 +243,7 @@ START_TEST(acos_test_1) {
 END_TEST
 
 START_TEST(acos_test_2) {
-    for (float k = -1; k <= 1; k += 0.0305) {
+    for (float k = -1; k <= 1; k += 0.0301) {
         double a = s21_acos(k);
         double b = acos(k);
         ck_assert_double_eq_tol(a, b, 1e-6);
@@ -380,6 +381,7 @@ START_TEST(fmod_test_1) {
     ck_assert_double_nan(s21_fmod(0, S21_NAN));
     ck_assert_double_nan(fmod(0, NAN));
     ck_assert_double_nan(s21_fmod(S21_NAN, S21_NAN));
+    ck_assert_double_nan(s21_fmod(S21_NAN, 3));
     ck_assert_double_nan(fmod(NAN, NAN));
     ck_assert_double_nan(s21_fmod(S21_NAN, S21_INF));
     ck_assert_double_nan(s21_fmod(S21_INF, S21_NAN));
@@ -405,7 +407,7 @@ END_TEST
 Suite *s21_string_suite(void) {
     Suite *suite;
 
-    suite = suite_create("s21_string");
+    suite = suite_create("s21_math");
     TCase *tcase_core = tcase_create("Core");
 
     tcase_add_test(tcase_core, pow_test_1);

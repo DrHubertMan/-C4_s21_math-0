@@ -3,9 +3,12 @@
 #include"s21_math.h"
 
 int main() {
-    double k = 0;
+    float k = 0;
+    double a = s21_acos(k);
+    double b = acos(k);
     printf("k = %lf\n", k);
-    printf("s21_sqrt = %Lf\n", s21_sqrt(k));
-    printf("sqrt = %lf\n", sqrt(k));
+    printf("s21_acos = %lf\n", a);
+    printf("def_acos = %lf\n",  b);
+    printf("********\n");
     return 0;
 }

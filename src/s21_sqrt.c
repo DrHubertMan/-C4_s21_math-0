@@ -22,7 +22,7 @@ long double s21_sqrt(double x) {
             }
             midle_point = (right_point + left_point) / 2;
         }
-    }  else if (x < 0) {
+    } else {
         midle_point = S21_NAN;
     }
     return midle_point;
