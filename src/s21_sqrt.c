@@ -16,7 +16,7 @@ long double s21_sqrt(double x) {
       reduction /= 10;
     }
   } else if (x < 0) {
-    result_tmp = s21_NAN;
+    result_tmp = S21_NAN;
   }
   result = result_tmp;
 

@@ -1,15 +1,16 @@
 #include"s21_math.h"
+#include<math.h>
 
 long double s21_asin(double x) {
     long double result = 0;
     if (x < 1 && x > -1) {
-        result = s21_atan(x / s21_sqrt(1 - (x * x)));
+        result = s21_atan(x / sqrt(1 - (x * x)));
     } else if (x == 1) {
-        result = s21_05PI;
+        result = S21_05PI;
     } else if (x == -1) {
-        result = -s21_05PI;
+        result = -S21_05PI;
     } else {
-        result = s21_NAN;
+        result = S21_NAN;
     }
     return result;
 }

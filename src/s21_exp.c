@@ -2,30 +2,33 @@
 
 long double s21_exp(double x) {
   long double result = 1;
-  long double add_result_tmp = 1;
+  long double added_value = 1;
   long double count = 1;
-
-  int flag = 0;
-
-  if (x < 0) {
-    x *= -1;
-    flag = 1;
-  }
-  while (s21_fabs(add_result_tmp) > s21_EPS) {
-    add_result_tmp *= x / count;
-    count++;
-    result += add_result_tmp;
-    if (result > s21_MAX_DOUBLE) {
-      result = s21_INF;
-      break;
+  if (x != x) {
+    result = S21_NAN;
+  } else if (x == S21_INF) {
+    result = x;
+  } else if (x == -S21_INF) {
+    result = 0;
+  } else if (x == 0) {
+    result = 1;
+  } else {
+    while (s21_fabs(added_value) > S21_EPS) {
+      added_value *= x / count;
+      result += added_value;
+      if (result > S21_MAX_DOUBLE) {
+        result = S21_INF;
+        break;
+      }
+      if (result < -7.083964E+002) {
+        result = 0;
+        break;
+      }
+      count++;
     }
   }
-  if (flag == 1) {
-    if (result > s21_MAX_DOUBLE)
-      result = 0;
-    else
-      result = 1. / result;
-  }
-  if (result > s21_MAX_DOUBLE) result = s21_INF;
+
+  if (result > S21_MAX_DOUBLE) result = S21_INF;
+
   return result;
 }

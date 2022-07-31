@@ -2,7 +2,7 @@
 
 long double s21_ceil(double x) {
   long double result = 0;
-  if (s21_IS_NAN(x) || s21_IS_INF(x)) {
+  if (S21_IS_NAN(x) || S21_IS_INF(x)) {
     result = x;
   } else {
     if (x >= 0) {

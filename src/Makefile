@@ -2,7 +2,7 @@ CC = gcc -g
 CFLAGSCOV = -Wall -Werror -Wextra -c -fprofile-arcs -ftest-coverage -lcheck
 CFLAGS = -Wall -Werror -Wextra -c
 
-all: gcov_report 
+all: test gcov_report 
 
 gcov_report: test
 	gcov -f *.gcda

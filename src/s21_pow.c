@@ -1,24 +1,65 @@
 #include "s21_math.h"
 
 long double s21_pow(double base, double exp) {
-  long double result = 1;
+  long double result;
 
-  if (exp == (long int)exp) {
-    if (exp >= 0) {
-      for (int i = 1; i <= exp; i++) result *= base;
+  if (base == 0) {
+    if (exp == 0) {
+      result = 1;
     } else {
-      base = 1 / base;
-      exp *= -1;
-      for (int i = 1; i <= exp; i++) result *= base;
-    }
-  } else {
-    if (base == 0) {
       result = 0;
-      if (exp < 0) result = s21_INF;
-    } else if (base < 0) {
-      result = s21_NAN;
+    }
+  } else if (base < 0) {
+    if ((long int)exp == exp) {
+      if (exp > 0) {
+        result = base;
+        for (long int i = 0; i < (long int)exp - 1; i++) {
+          result *= base;
+        }
+      } else if (exp == 0) {
+        result = 1;
+      } else {
+        result = 1 / base;
+        for (long int i = 0; i < (long int)exp * (-1) - 1; i++) {
+          result /= base;
+        }
+      }
     } else {
-      result = s21_exp(exp * s21_log(base));
+      if (S21_IS_INF(exp)) {
+        if (base * (-1) < 1) {
+          result = 0;
+        } else if (base * (-1) == 1) {
+          result = 1;
+        } else {
+          if (exp == -S21_INF) {
+            result = 0;
+          } else {
+            result = S21_INF;
+          }
+        }
+      } else {
+        result = -S21_NAN;
+      }
+    }
+  } else if (base == 1) {
+    result = 1;
+  } else {
+    if ((long int)exp == exp) {
+      if (exp > 0) {
+        result = base;
+        for (long int i = 0; i < (long int)exp - 1; i++) {
+          result *= base;
+        }
+      } else if (exp == 0) {
+        result = 1;
+      } else {
+        result = 1 / base;
+        for (long int i = 0; i < (long int)exp * (-1) - 1; i++) {
+          result /= base;
+        }
+      }
+    } else {
+      result = s21_exp(exp * (double)s21_log(base));
     }
   }
   return result;

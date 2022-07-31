@@ -3,15 +3,15 @@
 
 #include <stdio.h>
 
-#define s21_PI 3.14159265358979323846264338327950288
-#define s21_05PI 1.570796326794896619231
-#define s21_EXP 2.7182818284590452353602874713526624
+#define S21_PI 3.14159265358979323846264338327950288
+#define S21_05PI 1.570796326794896619231
+#define S21_EXP 2.7182818284590452353602874713526624
 
-#define s21_EPS 1e-16
-#define s21_MAX_DOUBLE 1.7976931348623157E308
+#define S21_EPS 1e-16
+#define S21_MAX_DOUBLE 1.7976931348623157E308
 
-#define s21_NAN 0.0 / 0.0
-#define s21_INF 1 / 0.0
+#define S21_NAN 0.0 / 0.0
+#define S21_INF 1 / 0.0
 
 // #define s21_IS_NAN(x) (!(x >= 0) && !(x < 0))
 // #define s21_IS_INF(x) ((x == S21_INF) || (x == -S21_INF))
@@ -19,11 +19,11 @@
 /*
   return 1 if NaN and 0 if not
 */
-#define s21_IS_NAN(x) __builtin_isnan(x)  // this (!(x >= 0) && !(x < 0))
+#define S21_IS_NAN(x) __builtin_isnan(x)  // this (!(x >= 0) && !(x < 0))
 /*
   return 1 if inf and -1 if -inf and 0 if finite
 */
-#define s21_IS_INF(x) __builtin_isinf(x)  // ((x == S21_INF) || (x == -S21_INF))
+#define S21_IS_INF(x) __builtin_isinf(x)  // ((x == S21_INF) || (x == -S21_INF))
 
 // betacind
 int s21_abs(int x);
