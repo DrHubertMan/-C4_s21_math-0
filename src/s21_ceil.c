@@ -7,7 +7,7 @@ long double s21_ceil(double x) {
   } else {
     if (x >= 0) {
       long double ceil_x = x - (long long int)x;
-      if (ceil_x <= 0.00000001) {
+      if (ceil_x <= 1E-6) {
         result = x;
       } else {
         result = (long long int)x + 1;

@@ -1,34 +1,124 @@
-CC = gcc -g
-CFLAGSCOV = -Wall -Werror -Wextra -c -fprofile-arcs -ftest-coverage -lcheck #-fsanitize=address
-CFLAGS = -Wall -Werror -Wextra -c
+CC:=gcc
 
-all: test gcov_report 
+MAKE_DIR:=mkdir -p
+RM_DIR:= rm -f
 
-gcov_report: test
+SANITAZER:=#-fsanitize=address 
+DEBUG_FLAG=-g
+
+AR_RC:= ar rc
+RAN:= ranlib
+
+SCHOOL_FLAGS:=-c -Wall -Wextra -Werror -std=c11 
+CFLAGS?= $(SCHOOL_FLAGS) $(DEBUG_FLAG) $(SANITAZER)
+TESTS_CFLAGS:= -g $(SCHOOL_FLAGS) #$(shell pkg-config --cflags check)
+
+GCOV_FLAGS?=-fprofile-arcs -ftest-coverage
+
+TESTS_LIBS?=-lcheck
+
+CPPLINT?=CPPLINT.cfg
+
+TAGET?=s21_math.a
+
+TESTS_TAGET?=TESTS_s21_math.a
+TESTS_EXEC?=test
+TESTS_GCOV_EXEC?=tests_gcov
+
+GCOV_REPORT:=gcov_reports
+GCOV_TARGET_RCGET:=./coverage
+GCOV_INFO:=coverage.info
+
+SOURCES_DIR?=.
+TESTS_SOURCES_DIR?=./tests
+
+OBJECTS_DIR?=./objects
+TESTS_OBJECTS_DIR?=./tests/objects
+
+INCLUDES:=$(shell find $(SOURCES_DIR) -maxdepth 1 -name "s21_*.h")
+TESTS_INCLUDES:=$(shell find $(TESTS_SOURCES_DIR) -maxdepth 1 -name "*.h")
+
+SOURCES:=$(shell find $(SOURCES_DIR) -maxdepth 1 -name "s21_*.c")
+TESTS_SOURCES:=$(shell find $(TESTS_SOURCES_DIR) -maxdepth 1 -name "*.c")
+
+OBJECTS:=$(addprefix $(OBJECTS_DIR)/, $(notdir $(SOURCES:.c=.o)))
+TESTS_OBJECTS:=$(addprefix $(TESTS_OBJECTS_DIR)/, $(notdir $(TESTS_SOURCES:.c=.o))) #$(TESTS_OBJECTS_DIR)/main.o
+GCOV_OBJECTS:=$(addprefix $(TESTS_OBJECTS_DIR)/, $(notdir $(SOURCES:.c=.o)))
+
+GCDA:=$(shell find $(TESTS_OBJECTS_DIR) -maxdepth 1 -name "*.gcda")
+GCNO:=$(shell find $(TESTS_OBJECTS_DIR) -maxdepth 1 -name "*.gcno")
+
+all: $(TAGET) test gcov_report
+
+gcov_objects: $(GCOV_OBJECTS) Makefile
+
+$(TAGET): $(OBJECTS) Makefile
+	$(AR_RC) $(TAGET) $(OBJECTS)
+	$(RAN) $(TAGET)
+
+$(TESTS_TAGET): $(GCOV_OBJECTS) $(INCLUDES)
+	$(AR_RC) $(TESTS_TAGET) $(GCOV_OBJECTS)
+	$(RAN) $(TESTS_TAGET)
+
+test: $(TAGET) $(TESTS_OBJECTS_DIR)/main.o $(TESTS_OBJECTS) $(TESTS_INCLUDES) Makefile
+	$(CC) $(TESTS_OBJECTS) -g $(TESTS_OBJECTS_DIR)/main.o $(SANITAZER) $(GCOV_FLAGS) -o $(TESTS_EXEC) $(TESTS_LIBS) -L. $(TAGET)
+	./test
+
+$(TESTS_OBJECTS_DIR)/main.o: main.c 
+	@$(MAKE_DIR) $(TESTS_OBJECTS_DIR)
+	$(CC) $(CFLAGS) -o $(TESTS_OBJECTS_DIR)/main.o main.c  
+
+$(TESTS_OBJECTS_DIR)%.o: $(TESTS_SOURCES_DIR)%.c $(TESTS_INCLUDES) 
+	@$(MAKE_DIR) $(TESTS_OBJECTS_DIR)
+	$(CC) $(TESTS_CFLAGS) -o $@ -c $<
+
+$(OBJECTS): $(OBJECTS_DIR)%.o: $(SOURCES_DIR)%.c $(INCLUDES) 
+	@$(MAKE_DIR) $(OBJECTS_DIR)
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+tests_gcov: $(TESTS_TAGET) $(TESTS_OBJECTS_DIR)/main.o $(TESTS_OBJECTS) 
+	$(CC) $(TESTS_OBJECTS) $(TESTS_OBJECTS_DIR)/main.o $(GCOV_FLAGS) -o $(TESTS_GCOV_EXEC) $(TESTS_LIBS) -L. $(TESTS_TAGET)
+
+$(GCOV_OBJECTS): $(TESTS_OBJECTS_DIR)%.o: $(SOURCES_DIR)%.c $(TESTS_INCLUDES)
+	@$(MAKE_DIR) $(TESTS_OBJECTS_DIR)
+	$(CC) $(CFLAGS) -o $@ -c $<
+
+gcov_report: $(GCOV_TARGET_RCGET)
 	gcov -f *.gcda
 	lcov -t "test" -o test.info -c -d . --rc lcov_branch_coverage=1
 	genhtml -o report test.info  --rc lcov_branch_coverage=1
-	mkdir timeout
-	rm -rf timeout
-	open /Users/mammiemi/Desktop/C4_s21_math-0/src/report/index.html
+	sleep 0.5
+	open report/index.html
+$(GCOV_TARGET_RCGET): CFLAGS += $(GCOV_FLAGS)
 
-test: s21_math.a
-	$(CC) --coverage -o test_coverage.out tests/tests.o -lcheck -L. s21_math.a 
-	./test_coverage.out
+$(GCOV_TARGET_RCGET): $(GCOV_INFO)
+	genhtml $(GCOV_INFO) -o $(GCOV_TARGET_RCGET)
 
+$(GCOV_INFO): tests_gcov
+	./$(TESTS_GCOV_EXEC)
+	geninfo $(TESTS_OBJECTS_DIR) -b . -o ./$(GCOV_INFO)
 
-s21_math.a: s21_math.o
-	ar rc s21_math.a *.o
-	ranlib s21_math.a
+open:
+	open coverage/index.html
 
-s21_math.o: tests.o
-	$(CC) $(CFLAGSCOV) *.c
-
-tests.o:
-	mkdir tests 
-	$(CC) $(CFLAGS) -o tests/tests.o tests.c
+# miniverter:
+# 	bash ../materials/build/run.sh 
 
 clean:
-	rm -rf *.o *.gcno *.gcda *.info *.out *.a *.gcov report tests
+	$(RM_DIR) $(OBJECTS)
+	$(RM_DIR) $(GCDA)
+	$(RM_DIR) $(GCNO)
+	$(RM_DIR) $(TESTS_OBJECTS)
+	$(RM_DIR) $(TESTS_OBJECTS_DIR)/main.o
+	$(RM_DIR) $(GCOV_OBJECTS)
+	$(RM_DIR) $(CPPLINT)
 
-rebuild: clean all
+all_clean: clean
+	$(RM_DIR) $(TAGET)
+	$(RM_DIR) $(TESTS_EXEC)
+	$(RM_DIR) $(TESTS_TAGET)
+	$(RM_DIR) $(TESTS_GCOV_EXEC)
+	$(RM_DIR) $(GCOV_INFO)
+	$(RM_DIR) -r $(GCOV_TARGET_RCGET)
+
+rebuild: all_clean all
